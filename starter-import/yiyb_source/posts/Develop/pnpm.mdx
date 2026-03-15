@@ -1,0 +1,112 @@
+---
+title: 패키지 매니저 pnpm 알아보기
+description: pnpm의 등장배경과 특징에 대해서 알아봅시다.
+createdAt: 2024-05-06
+thumbnail: /images/posts/develop/pnpm/thumbnail.png
+---
+
+안녕하세요! 오늘은 수많은 자바스크립트 패키지를 관리하는 패키지 매니저 중 하나인 `pnpm`의 등장배경과 어떤 특징을 갖고 있는지 알아보도록 하겠습니다.
+
+> pnpm 공식 사이트 [https://pnpm.io/ko](바로가기)
+
+## 1. npm과 yarn 📰
+
+![npm과 yarn](/images/posts/develop/pnpm/npm-and-yarn.png)
+
+pnpm이 등장하기 전, 대표적인 자바스크립트의 패키지 매니저는 `npm`과 `yarn`이 있었습니다.
+
+<br />
+
+`npm`과 `yarn`은 패키지를 설치할때, 하위 패키지들의 **중복 설치를 방지**하기 위해서 `node_modules` 폴더 하위에 모두 `평탄`하게 위치시켰습니다.
+
+![패키지 설치 평탄화](/images/posts/develop/pnpm/package-plat-install.png)
+
+만약 A, B라는 패키지의 공통 하위 패키지로 C(1.0) 패키지가 존재할때, 평탄하게 위치시키면 C 패키지가 중복으로 설치되지 않는다는 것이죠. `(호이스팅 기법)`
+
+> 추가적으로 설치하려는 하위 패키지가 `node_modules`에 미리 설치되어있지만 버전이 다른경우에는 해당 패키지의 하위에 위치합니다. (버전 충돌 방지)
+
+이처럼 모든 패키지를 `node_modules` 하위에 평탄하게 위치하면 패키지를 설치하면 중복을 줄일 수 있는 장점이 있지만, 개발자가 직접 설치하지 않은 패키지들도 `import`할 수 있다는 단점이 생깁니다. (이를 `유령 의존성` 문제라고 합니다.)
+
+<br />
+
+예를들어 `react-router-dom` 패키지를 설치하고 사용할때, 해당 패키지의 하위 패키지인 `react-router`를 실수로 `import` 해버리는 등 개발자의 실수가 일어나기 쉽습니다.
+
+이렇듯 장점과 단점이 공존하는 `npm`과 `yarn`을 보완하기 위해, 새로운 패키지 매니저인 `pnpm`이 출시되었습니다.
+
+## 2. pnpm의 특징 ⭐
+
+![pnpm](/images/posts/develop/pnpm/pnpm.png)
+
+`pnpm`을 풀어서 쓰면 `performant npm`이라고 하는데요. 이름처럼 **npm의 단점을 보완한 향상된 패키지 매니저**입니다.
+
+<br />
+
+`pnpm`이 `npm`과 `yarn`의 단점을 보완하기 위해서 어떤 특징을 가지고 있는지 알아보겠습니다.
+
+> 이와 관련한 pnpm 공식문서 [바로 가기](https://pnpm.io/ko/motivation)
+
+### 2-1. 디스크 관리
+
+![content-addressable-store](/images/posts/develop/pnpm/content-addressable-store.svg)
+
+`pnpm`은 다른 패키지 매니저와는 다르게 `content-addressable-store`라는 중앙 스토어가 존재하는데요. `pnpm`으로 구성된 프로젝트에서는 패키지 설치시 **중앙 스토어에 최초로 설치**되고, **이미 설치된 패키지라면 중앙 스토어에서 내려받습니다.**
+
+> 중앙 스토어에서 내려받을때 해당 패키지 파일들은 [하드 링크](https://ko.wikipedia.org/wiki/%ED%95%98%EB%93%9C_%EB%A7%81%ED%81%AC)로 만들어지기 때문에, 용량이 늘어나지 않습니다.
+
+만약 10개의 프로젝트에서 동일한 패키지를 설치시 차지하는 용량이 기존에는 10배 증가했지만, `pnpm`을 사용하면 딱 한번만 설치되기 때문에 용량이 중복으로 증가되지 않습니다. 이를 통해서 `디스크 최적화` 및 `패키지 중복 설치`를 해결할 수 있습니다.
+
+### 2-2. 비평탄한 패키지
+
+앞서 `npm`과 `yarn`은 `node_modules` 하위에 모든 패키지를 평탄하게 설치하기 때문에, 개발자가 실수로 다른 패키지를 `import`하여 사용할 가능성이 높은 단점(유령 의존성 문제)이 있었습니다.
+
+그러나 `pnpm`에서는 **비평탄한 패키지 설치 구조**를 사용하여 위의 문제를 해결했습니다.
+
+<br />
+
+`pnpm`을 사용하여 패키지 설치시, `node_modules/.pnpm`라는 폴더의 하위에 `하드 링크`로 구성된 모든 패키지(하위 패키지 포함)가 위치합니다.
+
+그리고 `package.json`에 명시된 패키지들만 `node_modules`의 하위에 위치시키는데요. 만약 react, next 패키지를 설치하는 경우(하위 패키지로는 ts-node가 존재한다고 가정합니다.), 아래처럼 구성이 됩니다.
+
+> `node_modules` 하위의 패키지 폴더는 .pnpm안에 있는 패키지 폴더를 `심볼릭 링크`로 가리킵니다.
+
+```shell
+node_modules
+  // 심볼릭 링크
+  react -> .pnpm/react/node_modules/react
+  next -> .pnpm/next/node_modules/next
+  .pnpm
+    react
+      node_modules
+        react
+
+        // 심볼릭 링크
+        ts-node -> .pnpm/ts-node/node_modules/ts-node
+    next
+      node_modules
+        next
+    ts-node
+      node_modules
+        ts-node
+        express -> .pnpm/express/node_modules/express
+    express
+      node_modules
+        express
+        ...
+    ...
+```
+
+위의 폴더 구조에서는 [심볼릭 링크](https://ko.wikipedia.org/wiki/%EC%8B%AC%EB%B3%BC%EB%A6%AD_%EB%A7%81%ED%81%AC)를 사용했음을 알 수 있는데요. `node_modules 하위 -> .pnpm 패키지`, `.pnpm 패키지의 하위 패키지 -> .pnpm` 방향으로 가리킬때 심볼릭 링크를 사용합니다.
+
+<br />
+
+위처럼 `pnpm`은 `심볼릭 링크`를 사용하여 `유령 의존성` 문제를 해결 했습니다. 이로 인해서 개발자가 원하지 않는 패키지를 `import`하는 실수가 일어나지 않습니다.
+
+## 3. 마치며 📌
+
+오늘은 패키지 매니저 `pnpm`의 등장배경과 특징에 대해서 알아봤습니다. 위에서 소개해드린 `pnpm`의 특징 때문에 최근엔 저도 `pnpm`만을 사용하여 프로젝트를 구성하는데, 되게 좋습니다.
+
+<br />
+
+기존에 사용중인 `npm`과 `yarn`을 대체하는 패키지 매니저를 찾으시는 분들께 `pnpm`을 한번 보시는것을 추천드립니다. 😀
+
+이상으로 글을 마치겠습니다. 글 읽어주셔서 감사합니다!
