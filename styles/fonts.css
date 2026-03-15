@@ -1,0 +1,17 @@
+/* Pretendard webfont subset (local copy) */
+@font-face{font-family: 'Pretendard'; src: url('/public/fonts/pretendard/pretendard-regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap}
+@font-face{font-family: 'Pretendard'; src: url('/public/fonts/pretendard/pretendard-medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap}
+@font-face{font-family: 'Pretendard'; src: url('/public/fonts/pretendard/pretendard-semi-bold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap}
+@font-face{font-family: 'Pretendard'; src: url('/public/fonts/pretendard/pretendard-bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap}
+
+:root { --muted: #6b7280; --bg:#ffffff; --fg:#0b1220; --accent:#3b82f6 }
+
+body { font-family: 'Pretendard', -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color:var(--fg); background:var(--bg); }
+
+/* Slightly different code block tone than yiyb: softer background, deeper shadow */
+pre { background: linear-gradient(180deg,#071022 0%, #041017 100%); color:#e6eef6; padding:1rem; border-radius:12px; box-shadow: 0 10px 40px rgba(2,6,23,0.65) }
+code { background: rgba(255,255,255,0.02); padding:0.15rem 0.35rem; border-radius:6px }
+
+.post-content { max-width:760px; margin:0 auto; padding:1.25rem }
+
+@media(max-width:640px){ .post-content{padding:0.75rem} }
