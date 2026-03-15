@@ -13,8 +13,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Install
-        run: rm -f package-lock.json && npm install
+      - name: Install dependencies
+        run: |
+          npm install -g npm@latest
+          rm -rf node_modules package-lock.json
+          npm install
       - name: Build
         run: npm run build && npm run export
       - name: Deploy to gh-pages
