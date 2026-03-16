@@ -11,6 +11,14 @@ const siteMetadata = {
   email: 'jamie@example.com',
   github: 'https://github.com/hericobacter-spec',
   twitter: 'https://twitter.com/example',
+  facebook: '',
+  youtube: '',
+  linkedin: '',
+  instagram: '',
+  mastodon: '',
+  threads: '',
+  medium: '',
+  x: '',
   theme: 'system',
 }
 
