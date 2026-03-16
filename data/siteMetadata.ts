@@ -20,6 +20,7 @@ const siteMetadata = {
   medium: '',
   x: '',
   bluesky: '',
+  stickyNav: false,
   theme: 'system',
 }
 
