@@ -1,0 +1,17 @@
+const siteMetadata = {
+  title: 'Jamie Blog',
+  author: 'Jamie',
+  headerTitle: 'Jamie Blog',
+  description: 'Next + MDX + Tailwind starter',
+  language: 'ko-KR',
+  locale: 'ko-KR',
+  siteUrl: 'https://hericobacter-spec.github.io/jamieblog',
+  siteRepo: 'https://github.com/hericobacter-spec/jamieblog',
+  socialBanner: '/static/images/twitter-card.png',
+  email: 'jamie@example.com',
+  github: 'https://github.com/hericobacter-spec',
+  twitter: 'https://twitter.com/example',
+  theme: 'system',
+}
+
+export default siteMetadata
