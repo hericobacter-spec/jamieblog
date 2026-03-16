@@ -22,7 +22,7 @@ const siteMetadata = {
   bluesky: '',
   stickyNav: false,
   theme: 'system',
-  search: {},
+  search: { provider: '' },
 }
 
 export default siteMetadata
