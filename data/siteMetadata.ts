@@ -19,6 +19,7 @@ const siteMetadata = {
   threads: '',
   medium: '',
   x: '',
+  bluesky: '',
   theme: 'system',
 }
 
